@@ -25,18 +25,18 @@
             @if (string.IsNullOrEmpty(serverUrl))
             {
                 <div class="col-12 mb-2">
-                    <MudTextField @bind-Value="serverUrl" Variant="Variant.Outlined" Label="URL" Margin="Margin.Dense" Clearable="true" Required="true" InputType="InputType.Url"/>
+                    <MudTextField @bind-Value="serverUrl" Variant="Variant.Outlined" Label="URL" Margin="Margin.Dense" Required="true" InputType="InputType.Url"/>
                     <ValidationMessage For="() => serverUrl" />
                 </div>
             }
             
             <div class="col-12 mb-2">
-                <MudTextField @bind-Value="request.Email" Variant="Variant.Outlined" Label="Email" Margin="Margin.Dense" Clearable="true" Required="true" InputType="InputType.Email"/>
+                <MudTextField @bind-Value="request.Email" Variant="Variant.Outlined" Label="Email" Margin="Margin.Dense" Required="true" InputType="InputType.Email"/>
                 <ValidationMessage For="() => request.Email" />
             </div>
 
             <div class="col-12 mb-3">
-                <MudTextField @bind-Value="request.Password" Variant="Variant.Outlined" Label="Password" Margin="Margin.Dense" Clearable="true" Required="true" InputType="InputType.Password" />
+                <MudTextField @bind-Value="request.Password" Variant="Variant.Outlined" Label="Password" Margin="Margin.Dense" Required="true" InputType="InputType.Password" />
                 <ValidationMessage For="() => request.Password" />
             </div>
 

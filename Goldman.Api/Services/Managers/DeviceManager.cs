@@ -75,18 +75,12 @@ public sealed class DeviceManager
     
     public async Task<OperationResult> UpdateLocationAsync(Device device, Location location)
     {
-        var now = DateTime.UtcNow;
-        if (location.Timestamp < now.AddMinutes(-1) || location.Timestamp > now.AddMinutes(1))
-        {
-            return OperationResult.Fail("Location timestamp is incoherent.");
-        }
-        
         if (device.Location.Longitude == location.Longitude && device.Location.Latitude == location.Latitude)
         {
             return OperationResult.Success();
         }
         
-        device.Location = location;
+        device.Location.Timestamp = DateTime.UtcNow;
         _context.Devices.Update(device);
         _cache.Set(device.Id, device, TimeSpan.FromMinutes(15));
         

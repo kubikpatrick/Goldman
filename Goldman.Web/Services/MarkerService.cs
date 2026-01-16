@@ -9,7 +9,7 @@ namespace Goldman.Web.Services;
 public sealed class MarkerService
 {
     private readonly MapLibre _map;
-    private HashSet<string> _ids;
+    private readonly HashSet<string> _ids;
     
     public MarkerService(MapLibre map)
     {

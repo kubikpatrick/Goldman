@@ -1,0 +1,42 @@
+﻿@using Humanizer
+
+@using Goldman.Models
+@using Goldman.Models.Devices
+
+@using MudBlazor
+
+<MudPaper Class="d-flex align-center p-3 rounded-4" Elevation="0" Outlined="true" @onclick="@OnClick">
+    @if (Device.Type is DeviceType.Computer)
+    {
+        <MudImage Src="images/computer.png" Alt="Computer image" Width="45" Height="45" Class="rounded-circle" />
+    }
+    else
+    {
+        <MudImage Src="images/smartphone.png" Alt="Smartphone image" Width="45" Height="45" Class="rounded-circle" />
+    }
+
+    <div class="ms-2">
+        @if (CurrentLocation is not null)
+        {
+            <MudText Typo="Typo.body2" Class="fw-semibold" Style="font-size: 0.8rem;">@Device.Name (@Location.CalculateDistance(Device.Location, CurrentLocation) km)</MudText>
+        }
+        else
+        {
+            <MudText Typo="Typo.body2" Class="fw-semibold" Style="font-size: 0.8rem;">@Device.Name</MudText>
+        }
+        
+        <MudText Typo="Typo.caption" Color="Color.Surface" Style="font-size: 0.675rem;">@Device.Location.Timestamp.Humanize()</MudText>
+    </div>
+</MudPaper>
+
+@code
+{
+    [Parameter]
+    public required Device Device { get; set; }
+    
+    [Parameter]
+    public Location? CurrentLocation { get; set; }
+    
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+}

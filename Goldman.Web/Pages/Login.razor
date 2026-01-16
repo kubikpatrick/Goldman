@@ -1,0 +1,81 @@
+﻿@page "/login"
+
+@layout AuthenticationLayout
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject ServerUrlService ServerUrlService
+
+@using Goldman.Http.Requests
+@using Goldman.Http.Responses
+@using Goldman.Web.Services
+
+@using Microsoft.AspNetCore.Components.Authorization
+
+@using MudBlazor
+
+<PageTitle>Login</PageTitle>
+
+<div class="d-flex align-items-center justify-content-center vh-100">
+    <EditForm Model="request" OnValidSubmit="SubmitAsync">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+
+        <div class="row w-50">
+            @if (string.IsNullOrEmpty(serverUrl))
+            {
+                <div class="col-12 mb-2">
+                    <MudTextField @bind-Value="serverUrl" Variant="Variant.Outlined" Label="URL" Margin="Margin.Dense" Clearable="true" Required="true" InputType="InputType.Url"/>
+                    <ValidationMessage For="() => serverUrl" />
+                </div>
+            }
+            
+            <div class="col-12 mb-2">
+                <MudTextField @bind-Value="request.Email" Variant="Variant.Outlined" Label="Email" Margin="Margin.Dense" Clearable="true" Required="true" InputType="InputType.Email"/>
+                <ValidationMessage For="() => request.Email" />
+            </div>
+
+            <div class="col-12 mb-3">
+                <MudTextField @bind-Value="request.Password" Variant="Variant.Outlined" Label="Password" Margin="Margin.Dense" Clearable="true" Required="true" InputType="InputType.Password" />
+                <ValidationMessage For="() => request.Password" />
+            </div>
+
+            <div class="d-flex justify-content-between mb-3">
+                <a href="/sign-up" class="text-decoration-none small">No account ?</a>
+            </div>
+
+            <div class="d-grid">
+                <MudButton Variant="Variant.Outlined" ButtonType="ButtonType.Submit" Color="Color.Tertiary">Login</MudButton>
+            </div>
+        </div>
+    </EditForm>
+</div>
+
+@code 
+{
+    private string serverUrl;
+    private LoginRequest request = new LoginRequest();
+    
+    protected override async Task OnInitializedAsync()
+    {
+        serverUrl = await ServerUrlService.GetServerUrlAsync() ?? string.Empty;
+    }
+    
+    private async Task SubmitAsync()
+    {
+        serverUrl = serverUrl.TrimEnd('/');
+        
+        var response = await Http.PostAsJsonAsync($"{serverUrl}/authentication/login", request);
+        if (!response.IsSuccessStatusCode)
+        {
+            
+        }
+        
+        var content = await response.Content.ReadFromJsonAsync<TokenResponse>();
+
+        await ServerUrlService.SetServerUrlAsync(serverUrl);
+        await ((JwtAuthenticationStateProvider)AuthenticationStateProvider).NotifyAuthenticationAsync(content.AccessToken);
+
+        Navigation.NavigateTo("/");
+    }
+}

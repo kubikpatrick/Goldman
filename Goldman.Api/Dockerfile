@@ -13,6 +13,9 @@ COPY . .
 WORKDIR "/src/Goldman.Api"
 RUN dotnet build "./Goldman.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="$PATH:/root/.dotnet/tools"
+
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./Goldman.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false

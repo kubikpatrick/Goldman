@@ -10,7 +10,6 @@
 
 @using Goldman.Models
 @using Goldman.Models.Devices
-@using Goldman.Models.Groups
 @using Goldman.Web.Services
 @using Goldman.Web.Components
 
@@ -30,13 +29,13 @@
     <div class="d-none d-md-block col-0 col-sm-3 col-md-2">
         <MudTabs Ripple="false" Centered="true" MinimumTabWidth="0%" Outlined="true" Rounded="true" Color="Color.Info" Border="false">
             <MudTabPanel Text="Devices">
-                @if (devices is null || groups is null)
+                @if (devices is null)
                 {
                     <Spinner />
                 }
                 else
                 {
-                    @if (devices.Count == 0 && groups.Count == 0)
+                    @if (devices.Count == 0)
                     {
                         <p>No devices added.</p>
                     }
@@ -83,7 +82,6 @@
 
     private HubConnection connection;
     private List<Device>? devices;
-    private List<Group>? groups;
     private Location? currentLocation;
     private string serverUrl;
     
@@ -108,7 +106,6 @@
     private async Task FetchDataAsync()
     {
         devices = await Http.GetFromJsonAsync<List<Device>>($"{serverUrl}/devices");
-        groups = await Http.GetFromJsonAsync<List<Group>>($"{serverUrl}/groups");
     }
 
     private async Task CreateRealTimeConnectionAsync()
@@ -139,6 +136,7 @@
         await map.AddControl(ControlType.NavigationControl, ControlPosition.TopRight);
         await map.AddControl(ControlType.GlobeControl, ControlPosition.TopRight);
         await map.AddControl(ControlType.GeolocateControl, ControlPosition.TopRight);
+
     }
 
     private async Task AddMarkerAsync(Device device)

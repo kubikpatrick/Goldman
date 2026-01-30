@@ -21,14 +21,7 @@ public sealed class LocationHub : Hub
 
     public override async Task OnConnectedAsync()
     {
-        var groups = await _context.Groups.Where(g => g.Users.Any(u => u.Id == Context.UserIdentifier)).AsNoTracking().ToListAsync();
-        if (groups.Count > 0)
-        {
-            foreach (var group in groups)
-            {
-                await Groups.AddToGroupAsync(Context.ConnectionId, group.Id);
-            }
-        }
+
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
@@ -36,15 +29,6 @@ public sealed class LocationHub : Hub
         if (exception is not null)
         {
             _logger.LogError("{message}", exception.Message);
-        }
-        
-        var groups = await _context.Groups.Where(g => g.Users.Any(u => u.Id == Context.UserIdentifier)).ToListAsync();
-        if (groups.Count > 0)
-        {
-            foreach (var group in groups)
-            {
-                await Groups.RemoveFromGroupAsync(Context.ConnectionId, group.Id);
-            }
         }
     }
 }
